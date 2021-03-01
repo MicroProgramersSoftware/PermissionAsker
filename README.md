@@ -35,8 +35,8 @@ Usage
 -----
 Get Permission Dialog in just 2 lines. 
 
-* First add permissions in your menifest file like this
-```
+* First add permissions in your **AndroidManifest.xml** file like this
+```xml
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
 ```
@@ -46,7 +46,7 @@ Get Permission Dialog in just 2 lines.
 And that's it.
 
 
-```
+```java
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
         PermissionAsker.getUserPermissions(getApplicationContext(), permissions);
 ```
