@@ -1,3 +1,5 @@
+![PermissionAsker](https://github.com/MicroProgramers/PermissionAsker/blob/master/placeholder.png)
+
 # PermissionAsker
 
 [![](https://www.jitpack.io/v/MicroProgramers/PermissionAsker.svg)](https://www.jitpack.io/#MicroProgramers/PermissionAsker)
@@ -43,6 +45,10 @@ And that's it.
         PermissionAsker.getUserPermissions(getApplicationContext(), permissions);
 ```
 
+
+
+
+![PermissionAsker](https://github.com/MicroProgramers/PermissionAsker/blob/master/permissions.jpg)
 
 License
 -------
