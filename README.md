@@ -40,7 +40,7 @@ And that's it.
 
 ```
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
-        PermissionAsker.getUserPermissions(MainActivity.this, permissions);
+        PermissionAsker.getUserPermissions(getApplicationContext(), permissions);
 ```
 
 
