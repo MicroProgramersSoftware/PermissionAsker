@@ -10,20 +10,12 @@ import androidx.core.app.ActivityCompat;
 public class PermissionAsker {
 
 
-    public static int PERMISSION_ALL = 1;
-
-
-
-//        Manifest.permission.WRITE_EXTERNAL_STORAGE
-
-
-
-
 
     public static void getUserPermissions(Context context, String[] PERMISSIONS)
     {
         if (!hasPermissions(context, PERMISSIONS))
         {
+            int PERMISSION_ALL = 1;
             ActivityCompat.requestPermissions((Activity) context, PERMISSIONS, PERMISSION_ALL);
         }
     }
