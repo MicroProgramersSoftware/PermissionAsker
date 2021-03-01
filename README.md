@@ -25,7 +25,7 @@ Step 3. Add the dependency:
 ```
 dependencies {
     ...
-    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.1'
+    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.2'
 }
 ```
 
