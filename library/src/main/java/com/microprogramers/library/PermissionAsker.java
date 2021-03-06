@@ -21,7 +21,7 @@ public class PermissionAsker {
     }
 
 
-    private static boolean hasPermissions(Context context, String... permissions)
+    public static boolean hasPermissions(Context context, String... permissions)
     {
         if (context != null && permissions != null)
         {
