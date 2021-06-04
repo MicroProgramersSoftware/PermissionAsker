@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.microprogramers.library.PermissionAsker;
+import com.microprogramers.library.PermissionCallbacks;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PermissionCallbacks
+{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,19 @@ public class MainActivity extends AppCompatActivity {
     public void perm(View view)
     {
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
-        PermissionAsker.getUserPermissions(MainActivity.this, permissions);
+        PermissionAsker permissionAsker = new PermissionAsker(this, this);
+        permissionAsker.getUserPermissions(MainActivity.this, permissions);
+    }
+
+    @Override
+    public void onStoragePermissionGranted()
+    {
+
+    }
+
+    @Override
+    public void onStoragePermissionDenied()
+    {
+
     }
 }
