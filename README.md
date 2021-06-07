@@ -27,7 +27,7 @@ Step 3. Add the dependency:
 ```
 dependencies {
     ...
-    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.4'
+    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.5'
 }
 ```
 
@@ -38,6 +38,7 @@ Get Permission Dialog in just 2 lines.
 * First add permissions in your **AndroidManifest.xml** file like this
 ```xml
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_SMS"/>
 ```
 
@@ -48,8 +49,10 @@ And that's it.
 
 ```java
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
-        PermissionAsker permissionAsker = new PermissionAsker(this, this);
-        permissionAsker.getUserPermissions(MainActivity.this, permissions);
+        if (!PermissionAsker.hasPermissions(this, permissions))
+	{
+	      PermissionAsker.getUserPermissions(MainActivity.this, permissions);
+	}
 ```
 
 
