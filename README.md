@@ -49,7 +49,7 @@ And that's it.
 
 ```java
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
-        if (PermissionAsker.hasPermissions(this, permissions))
+        if (!PermissionAsker.hasPermissions(this, permissions))
 	{
 	      PermissionAsker.getUserPermissions(MainActivity.this, permissions);
 	}
