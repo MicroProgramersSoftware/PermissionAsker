@@ -62,7 +62,7 @@ public class PermissionAsker extends Activity
                 }
             }
 
-//            ActivityCompat.requestPermissions((Activity) context, PERMISSIONS, PERMISSION_ALL);
+            ActivityCompat.requestPermissions((Activity) context, PERMISSIONS, PERMISSION_ALL);
         }
 
 
