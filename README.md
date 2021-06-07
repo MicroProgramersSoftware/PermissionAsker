@@ -27,7 +27,7 @@ Step 3. Add the dependency:
 ```
 dependencies {
     ...
-    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.3'
+    implementation 'com.github.MicroProgramers:PermissionAsker:1.0.4'
 }
 ```
 
@@ -48,7 +48,8 @@ And that's it.
 
 ```java
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_SMS};
-        PermissionAsker.getUserPermissions(getApplicationContext(), permissions);
+        PermissionAsker permissionAsker = new PermissionAsker(this, this);
+        permissionAsker.getUserPermissions(MainActivity.this, permissions);
 ```
 
 
