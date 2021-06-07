@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -22,17 +23,15 @@ public class PermissionAsker extends Activity
 {
 
     Context context;
-    PermissionCallbacks permissionCallbacks;
     private static final int PERMISSION_REQUEST_CODE = 123;
 
-    public PermissionAsker(Context context, PermissionCallbacks permissionCallbacks)
+    public PermissionAsker(Context context)
     {
         this.context = context;
-        this.permissionCallbacks = permissionCallbacks;
     }
 
 
-    public void getUserPermissions(Context context, String[] PERMISSIONS)
+    public static void getUserPermissions(Context context, String[] PERMISSIONS)
     {
         if (!hasPermissions(context, PERMISSIONS))
         {
@@ -80,11 +79,11 @@ public class PermissionAsker extends Activity
             {
                 if (Environment.isExternalStorageManager())
                 {
-                    permissionCallbacks.onStoragePermissionGranted();
+//                    permissionCallbacks.onStoragePermissionGranted();
                 }
                 else
                 {
-                    permissionCallbacks.onStoragePermissionDenied();
+//                    Toast.makeText(context, "Permission required", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -107,11 +106,11 @@ public class PermissionAsker extends Activity
                         boolean WRITE_EXTERNAL_STORAGE = grantResults[index] == PackageManager.PERMISSION_GRANTED;
                         if (WRITE_EXTERNAL_STORAGE)
                         {
-                            permissionCallbacks.onStoragePermissionGranted();
+//                            permissionCallbacks.onStoragePermissionGranted();
                         }
                         else
                         {
-                            permissionCallbacks.onStoragePermissionDenied();
+//                            permissionCallbacks.onStoragePermissionDenied();
                         }
                     }
 
