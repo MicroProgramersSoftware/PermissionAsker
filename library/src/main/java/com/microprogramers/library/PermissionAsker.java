@@ -9,73 +9,79 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class PermissionAsker extends Activity {
+import static android.os.Build.VERSION.SDK_INT;
+
+
+public class PermissionAsker {
 
     private static final int PERMISSION_REQUEST_CODE = 123;
-    private static final int REQUEST_CODE_MANAGE_ALL_FILES_ACCESS_PERMISSION = 2296;
 
     public interface PermissionCallback {
-        void onStoragePermissionGranted();
-        void onStoragePermissionDenied();
+        void onPermissionGranted(String[] permissions);
+        void onPermissionDenied(String[] permissions);
     }
 
-    public static void requestStoragePermission(Activity activity, PermissionCallback callback) {
-        if (hasStoragePermission(activity)) {
-            callback.onStoragePermissionGranted();
-            return;
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context == null || permissions == null) {
+            return false;
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s", activity.getApplicationContext().getPackageName())));
-                activity.startActivityForResult(intent, REQUEST_CODE_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-            } catch (Exception e) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                activity.startActivityForResult(intent, REQUEST_CODE_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context.getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
             }
-        } else {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
+        return true;
     }
 
-    public static boolean hasStoragePermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data, PermissionCallback callback) {
-        if (requestCode == REQUEST_CODE_MANAGE_ALL_FILES_ACCESS_PERMISSION) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callback.onStoragePermissionGranted();
+    public static void getUserPermissions(Context context, String[] permissions, PermissionCallback callback) {
+        if (!hasPermissions(context, permissions)) {
+            ArrayList<String> permissionList = new ArrayList<>(Arrays.asList(permissions));
+            if (permissionList.contains(Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                permissionList.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.setData(Uri.parse(String.format("package:%s", context.getPackageName())));
+                    ((Activity) context).startActivityForResult(intent, PERMISSION_REQUEST_CODE);
                 } else {
-                    callback.onStoragePermissionDenied();
+                    ActivityCompat.requestPermissions((Activity) context, permissions, PERMISSION_REQUEST_CODE);
                 }
+            } else {
+                ActivityCompat.requestPermissions((Activity) context, permissions, PERMISSION_REQUEST_CODE);
             }
+        } else if (callback != null) {
+            callback.onPermissionGranted(permissions);
         }
     }
 
-    public static void onRequestPermissionsResult(Activity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, PermissionCallback callback) {
+    public static void onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions, int[] grantResults, PermissionCallback callback) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            Map<String, Integer> permissionResults = new HashMap<>();
-            for (int i = 0; i < permissions.length; i++) {
-                permissionResults.put(permissions[i], grantResults[i]);
-            }
+            if (grantResults.length > 0) {
+                ArrayList<String> grantedPermissions = new ArrayList<>();
+                ArrayList<String> deniedPermissions = new ArrayList<>();
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        grantedPermissions.add(permissions[i]);
+                    } else {
+                        deniedPermissions.add(permissions[i]);
+                    }
+                }
 
-            if (permissionResults.containsKey(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                permissionResults.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                callback.onStoragePermissionGranted();
-            } else {
-                callback.onStoragePermissionDenied();
+                if (callback != null) {
+                    if (!deniedPermissions.isEmpty()) {
+                        callback.onPermissionDenied(deniedPermissions.toArray(new String[0]));
+                    } else {
+                        callback.onPermissionGranted(grantedPermissions.toArray(new String[0]));
+                    }
+                }
             }
         }
     }
